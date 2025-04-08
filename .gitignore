@@ -1,0 +1,17 @@
+# latex
+doc/*.pdf
+doc/*.aux
+doc/*.log
+doc/*.out
+
+# tmux
+doc/tmux*
+
+# cpp build files
+build/
+*.o
+*.out
+*.exe
+
+# generated points
+*.txt
