@@ -1,6 +1,7 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
+#include <chrono>
 
 using namespace std;
 using uint = unsigned int;
@@ -52,7 +53,7 @@ double brute_force_distances(vector<Point2D> &points) {
 
     bool duplicaExiste = detectorDuplicas(points);
     
-    if(duplica == true){
+    if(duplicaExiste == true){
         return 0.0;
     }
 
