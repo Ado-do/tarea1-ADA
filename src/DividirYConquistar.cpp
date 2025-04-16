@@ -77,7 +77,7 @@ Función CargarPuntos carga los puntos aleatorios
 a los vectores de puntos P 
 */
 
-void CargarPuntos(std::vector<Point2D> &P,std::vector<Point2D*> &X, std::vector<Point2D*> &Y, std::ifstream &PuntosRandom){
+void CargarPuntos(std::vector<Point2D> &P, std::ifstream &PuntosRandom){
     double x, y;
 
         while (PuntosRandom >> x >> y){
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
     std::vector<Point2D> puntos;
     std::vector<Point2D*> X, Y;
 
-    CargarPuntos(puntos, X, Y, archivo);
+    CargarPuntos(puntos, archivo);
 
     if (puntos.size() < 2) { // Se varía según la necesidad
         std::cerr << "Error: Se requieren al menos dos puntos para calcular la distancia mínima.\n";
