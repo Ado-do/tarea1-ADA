@@ -45,7 +45,7 @@ double brute_force_distances(vector<Point2D> &points) {
     }
     return min_dist;
 }
-    auto start = std::chrono::high_resolution_clock::now();
+    
 int main() {
     vector<Point2D> points;
 
@@ -64,14 +64,18 @@ int main() {
     // Mostrar puntos recibidos
     print_points(points);
 
+    auto start = std::chrono::high_resolution_clock::now();
+    
     // Calcular distancia entre todos los puntos
     double min_dist = brute_force_distances(points);
 
     // Mostrar la minima distancia entre puntos encontrada
     cout << "* Distancia minima encontrada:\n";
     printf("\tdist(%d, %d) = %.2lf\n", closest_points.first, closest_points.second, min_dist);
+    
     auto end = std::chrono::high_resolution_clock::now();
-auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-std::cout << "Tiempo de ejecución: " << duration.count() << " ns\n";
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    
+    std::cout << "Tiempo de ejecución: " << duration.count() << " ns\n";
     return 0;
 }

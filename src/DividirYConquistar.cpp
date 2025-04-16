@@ -217,7 +217,7 @@ double DividirParaConquistar(std::vector<Point2D> &P){
     return distanciaMinRecursiva(X, Y, 0, X.size());
 
 }
- auto start = std::chrono::high_resolution_clock::now();
+ 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         std::cerr << "Uso: " << argv[0] << " archivo_de_puntos.txt\n";
@@ -240,12 +240,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
+    auto start = std::chrono::high_resolution_clock::now();
+       
     double distanciaMinima = DividirParaConquistar(puntos);
     
     std::cout << "Distancia mínima: " << distanciaMinima << std::endl;
     
     auto end = std::chrono::high_resolution_clock::now();
-auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-std::cout << "Tiempo de ejecución: " << duration.count() << " ns\n";
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    std::cout << "Tiempo de ejecución: " << duration.count() << " ns\n";
+    
     return 0;
 }
