@@ -1,6 +1,7 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
+#include <chrono> 
 
 using namespace std;
 using uint = unsigned int;
@@ -44,7 +45,7 @@ double brute_force_distances(vector<Point2D> &points) {
     }
     return min_dist;
 }
-
+    auto start = std::chrono::high_resolution_clock::now();
 int main() {
     vector<Point2D> points;
 
@@ -69,6 +70,8 @@ int main() {
     // Mostrar la minima distancia entre puntos encontrada
     cout << "* Distancia minima encontrada:\n";
     printf("\tdist(%d, %d) = %.2lf\n", closest_points.first, closest_points.second, min_dist);
-
+    auto end = std::chrono::high_resolution_clock::now();
+auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+std::cout << "Tiempo de ejecución: " << duration.count() << " ns\n";
     return 0;
 }
