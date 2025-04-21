@@ -3,11 +3,13 @@
 #include <random>
 
 using namespace std;
-using uint = unsigned int;
 
-void validate_input(int argc, char *argv[], uint &n_points) {
+const string output_file_name = "points.txt";
+
+
+void validate_input(int argc, char *argv[], int &n_points) {
     if (argc != 2) {
-        cerr << "Usage: ./get_random_points <n_points>\n";
+        cerr << "Uso: " << argv[0] << " <n_points>\n";
         exit(EXIT_FAILURE);
     }
 
@@ -22,13 +24,13 @@ void validate_input(int argc, char *argv[], uint &n_points) {
     }
 
     if (n_points < 8 || n_points > 512) {
-        cerr << "<n_points> must be between 2^3 (8) and 2^9 (512).\n";
+        cerr << "<n_points> debe de estar en el rango [8 (2^3), 512 (2^9)].\n";
         exit(EXIT_FAILURE);
     }
 }
 
 int main(int argc, char *argv[]) {
-    uint n_points;
+    int n_points;
     validate_input(argc, argv, n_points);
 
     int min_coord = 0, max_coord = 100;
@@ -37,20 +39,19 @@ int main(int argc, char *argv[]) {
     mt19937 gen(rd());
     uniform_int_distribution<> distrib(min_coord, max_coord);
 
-    // Abrimos el archivo de salida
-    ofstream out("points.txt");
+    ofstream out(output_file_name);
     if (!out) {
-        cerr << "No se pudo abrir el archivo points.txt\n";
+        cerr << "No se pudo abrir el archivo " << output_file_name << "\n";
         return EXIT_FAILURE;
     }
 
-    while (n_points--) {
+    for (int i = 0; i < n_points; i++) {
         int x = distrib(gen), y = distrib(gen);
         out << x << ' ' << y << '\n';
     }
 
+    printf("Archivo \"%s\" con %d puntos aleatorios creado!\n", output_file_name.c_str(), n_points);
     out.close();
-    
 
     return 0;
 }

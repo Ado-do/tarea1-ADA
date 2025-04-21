@@ -1,17 +1,23 @@
 # latex
-doc/*.pdf
-doc/*.aux
-doc/*.log
-doc/*.out
-
-# tmux
-doc/tmux*
+doc/*
+!doc/content/
+!doc/img/
+!doc/.latexmkrc
+!doc/*.tex
+!doc/*.bib
+!doc/*.cls
 
 # cpp build files
 build/
 *.o
 *.out
-*.exe
 
 # generated points
 *.txt
+
+# results
+*.csv
+*.png
+
+# clang
+.clang-format

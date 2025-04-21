@@ -1,29 +1,46 @@
 #include "points.hpp"
 
-#include <vector>
-#include <iostream>
 #include <chrono>
+#include <iostream>
+#include <set>
+#include <vector>
 
 using namespace std;
 
+bool detectorDuplicas(const std::vector<Point2D> &points) {
+    std::set<Point2D> puntosUnicos;
+    for (const auto &p : points) {
+        if (!puntosUnicos.insert(p).second) {
+            return true;
+        }
+    }
+    return false; // No se encontraron duplicados
+}
+
 double brute_force(vector<Point2D> &points) {
+
+    bool duplicaExiste = detectorDuplicas(points);
+
+    if (duplicaExiste == true) {
+        return 0.0;
+    }
+
+    double min_dist = euclidean_distance({0, 0}, {100, 100});
+    size_t n = points.size();
+
     #ifdef DEBUG
-    printf("Calculando con fuerza bruta las distancias entre todos los puntos:\n");
+    cout << "Calculando con fuerza bruta las distancias entre todos los puntos:\n";
     #endif
 
-    double min_dist = MAX_DIST;
-    size_t n = points.size();
     for (size_t i = 0; i < n - 1; i++) {
         for (size_t j = i + 1; j < n; j++) {
             double dist = euclidean_distance(points[i], points[j]);
-
             #ifdef DEBUG
-            printf("\tdist(p%zu, p%zu) = %6.2lf\n", i, j, dist);
+            printf("\tdist(%zu, %zu) = %6.2lf\n", i, j, dist);
             #endif
-
             if (dist < min_dist) {
-                min_dist = dist;
                 closest_points = {points[i], points[j]};
+                min_dist = dist;
             }
         }
     }
@@ -37,7 +54,6 @@ int main(int argc, char *argv[]) {
     }
 
     vector<Point2D> points = get_points_from_file(argv[1]);
-
     #ifdef DEBUG
     print_points(points);
     #endif
@@ -50,7 +66,7 @@ int main(int argc, char *argv[]) {
     auto end = std::chrono::high_resolution_clock::now();
 
     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-    cout << "Tiempo de ejecución:\n\t" << duration.count() << " ns\n";
+    std::cout << "Tiempo de ejecución:\n\t" << duration.count() << " ns\n";
 
     return 0;
 }
