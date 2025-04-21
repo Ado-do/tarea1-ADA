@@ -1,75 +1,89 @@
 %!TeX program = xelatex
 %!TeX encoding = UTF-8
-\documentclass{style}
+\documentclass{article}
 
-\begin{document}
-%%%%%%%%%%%%%%%%% RENOMBRE %%%%%%%%%%%%%%%%%
-\graphicspath{ {./img/} }
-\renewcommand{\contentsname}{Índice de contenido}
-\renewcommand{\listfigurename}{Índice de figuras}
-\renewcommand{\listtablename}{Índice de Tablas}
-\renewcommand{\tablename}{Tabla}
-\renewcommand{\figurename}{Imagen}
-\renewcommand*{\lstlistingname}{Código}
-
-
-%%%%%%%%%%%%%%%%% ENCABEZADO %%%%%%%%%%%%%%%%%
-% Si se quiere eliminar, se tiene que quitar tambien las configuraciones del style.cls
-% \fancyhf{} % Para quitar el molesto encabezado con el nombre de la seccion actual !!!!!!!!!!!!!!!!
-\fancyhead[L]{ % Encabezado a la izquierda
-  \begin{picture}(0,0) \put(-20,16){\includegraphics[width=15mm]{logo-udec1.pdf}} \end{picture}
-  \put(24,45){\textcolor{gray}{\scriptsize{\begin{tabular}{l}
-    UNIVERSIDAD DE CONCEPCIÓN\\
-    FACULTAD DE INGENIERÍA\\
-    DEPARTAMENTO DE INGENIERÍA INFORMÁTICA Y CIENCIA DE LA COMPUTACIÓN
-  \end{tabular}}}}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
 }
+\begin{document}
+\title{Analisis de Algoritmos \\ Tarea 1}
+%\date{18 de Abril 2025  [2025-04-18 Fri]} 
+\author{Nombres de los alumnos del grupo}
+
+\maketitle
 
 
-%%%%%%%%%%%%%%%%% PORTADA %%%%%%%%%%%%%%%%%
-% Opcion 1: Importar un pdf tamaño carta de EEUU
-%\includepdf[pages=-]{img/Portada.pdf} % cambiar portada por pdf
-% Opcion 2: Escribir una portada completa
-\input{content/portada.tex}
-% Opcion 3: Sin portada - Se recomienda quitar indices
+\section{Fuerza Bruta}
+
+\subsection{Implementación}
+Implemente un algoritmo \texttt{brute\_force} calculando las $n(n-1)$ distancias de manera a seleccionar la distancia mínima.
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsection{Correctitud}
+Realice un análisis de correctitud del algoritmo.
+
+\subsection{Complejidad Computacional}
+Defina y demuestre su complejidad computacional.
+
+\section{Dividir para Vencer}
+
+\subsection{Diseño}
+
+Diseñe o busque en Internet (cite su fuente) un algoritmo \texttt{divide\_and\_conquer} usando dividir para vencer para encontrar la distancia mínima en tiempo en $o(n^2)$.
+
+\subsection{Correctitud}
+Realice un análisis de correctitud del algoritmo.
+
+\subsection{Complejidad Computacional}
+Defina y demuestre su complejidad computacional.
 
 
-%%%%%%%%%%%%%%%%% INDICES %%%%%%%%%%%%%%%%%
-\setstretch{1}
-\vspace*{\fill}
-    \tableofcontents % No pude quitarle la negrita :c
-    % \listoftables
-    % \listoffigures
-    %\lstlistoflistings % Para hacer indice de codigo
-\vspace*{\fill}
+
+\section{Implementación}
+
+Implemente su algoritmo \texttt{divide\_and\_conquer}, comparando sus respuestas con las de su implementación de \texttt{brute\_force}.
+
+\begin{lstlisting}
+\end{lstlisting}
 
 
-%%%%%%%%%%%%%%%%% ESPACIADO %%%%%%%%%%%%%%%%%
-\setstretch{1.15} 
+\section{Análisis Experimental}
 
-%%%%%%%%%%%%%%%%% CONTENIDO %%%%%%%%%%%%%%%%%
-% \newpage
+\subsection{Diseño}
 
-\subfile{content/content.tex}
+Diseñe un análisis experimental calculando los tiempos de ejecución en nanosegundos de sus dos soluciones para un conjunto de $n$ puntos cuyas coordenadas enteras están elegidas al azar en un cuadrado de $100\times100$, variando la cantidad $n$ de puntos entre las potencias de dos de $2^3=8$ a $2^{9}=512$.
 
-\subfile{content/tutorial} % Eliminar en caso de no requerir
+\subsection{Realización}
 
-%%%%%%%%%%%%%%%%% BIBLIOGRAFIA %%%%%%%%%%%%%%%%%
-% \newpage
-% Hay 2 formas de agregar bibliografia:
-% 1. Agregar una bibliografia en un archivo .bib (Es super automatico)
-% (Al agregar citas como \citet{einstein}, \cite{latexcompanion,knuthwebsite} se agregaran automaticamente)
+Realice el análisis experimental diseñado, guardando los resultados obtenidos.
 
-% This document is an example of \texttt{natbib} package using in bibliography 
-% management. Three items are cited: \textit{The \LaTeX\ Companion} book \cite{latexcompanion}, the Einstein journal paper \citet{einstein}, and the 
-% Donald Knuth's website \cite{knuthwebsite}. The \LaTeX\ related items are
-% \cite{latexcompanion,knuthwebsite}. 
 
-\bibliographystyle{apacite}
-\bibliography{content/sample.bib} % Requiere crear un archivo .bib
+\begin{lstlisting}
+\end{lstlisting}
 
-% 2. Agregar una bibliografia en un archivo .tex 
-% (Es manual, pero comodo para los que no conoce el bibtex)
-% \subfile{content/bibliografia}
+\section{Mejora} Observando el tiempo de ejecución para valores grandes de $n$, proponga y evalúe una versión trivialmente mejorada de los dos algoritmos.
+
+
+\section{Gráfico} Construya un gráfico que muestre cómo varían los tiempos de ejecución de sus cuatros soluciones en nanosegundos, variando la cantidad $n$ de puntos entre las potencias de dos de $2^3=8$ a $2^9=512$.
+
+%  \begin{figure}
+%  \centering
+%  \includegraphics[width=\linewidth]{Programming/MinDistance/plot}
+%  \caption{Tiempo de ejecución de de los 4 algoritmos implementados.}\label{fig:fourAlgorithms}
+%  \end{figure}
+
+
+
 
 \end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
