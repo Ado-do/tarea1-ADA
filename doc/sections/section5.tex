@@ -1,0 +1,23 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+\section{Mejora (Constanza)}
+
+Observando el tiempo de ejecución para valores grandes de $n$, proponga y evalúe una versión
+trivialmente mejorada de los dos algoritmos.
+
+
+\subsection{Propuesta}
+Al realizar el análisis experimental con una gran cantidad de puntos, nos percatamos que muchas
+veces los puntos se duplicaban y resultaba en distancias mínimas cero, debido a la pequeño plano en
+que se realizan las pruebas ($100 \times 100$).
+
+Por lo tanto, agregamos la comprobación del caso en que los puntos se llegaban a repetir.
+Aquí un ejemplo de la comprobación implementada en el código, en \code{super\_brute\_force.cpp}:
+\vspace{1em}
+\lstinputlisting[style=cpp, firstline=12, lastline=29]{../../src/super_brute_force.cpp}
+\vspace{1em}
+Ambos códigos mejorados se encuentran en \code{src/super\_brute\_force.cpp} y
+\code{src/super\_divide\_and\_conquer.cpp}.
+
+\end{document}

@@ -1,0 +1,135 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+\section{Dividir para Vencer (Constanza)}
+
+Diseñe o busque en Internet (cite su fuente) un algoritmo \code{divide\_and\_conquer} usando
+dividir para vencer para encontrar tal distancia en tiempo en $\smallo{n^2}$. Realice un análisis
+de correctitud del algoritmo. Defina y demuestre su complejidad computacional.
+
+
+\subsection{Diseño}
+
+Se escoge el algoritmo explicado en el libro Introduction to Algorithms de Cormen et al.
+(Sección 33.4), el cual utiliza el paradigma de Dividir para Vencer para resolver de forma eficiente
+el problema del par de puntos más cercanos. El algoritmo que fue implementado para las
+siguientes secciones se basa en:
+
+\begin{description}
+	\item[Previo a la recursíon:]
+	      Se crean dos arreglos, $X$ e $Y$, que contienen todos los puntos del conjunto original.
+	      El arreglo $X$ se ordena de forma creciente según la coordenada $x$, mientras que el
+	      arreglo $Y$ se ordena de forma creciente según la coordenada $y$.
+
+	\item[Dividir para Conquistar:]
+	      Se divide en tres secciones:
+	      \begin{enumerate}
+		      \item \textbf{Caso base:}
+		            Al comenzar se revisa si los puntos existentes en el array a trabajar son
+		            menores o iguales a 3, de ser así se devuelve el resultado de
+		            utilizar \code{brute\_force}.
+		      \item \textbf{Dividir:}
+		            \begin{enumerate}
+			            \item Se calcula el punto medio del arreglo y se divide en 2 arreglos
+			                  $X_i$ y $X_d$ que corresponden a la mitad de la izquierda y de la
+			                  derecha respectivamente.
+
+			            \item De manera similar se crean los arreglos $Y_i$ e $Y_d$, que guardan
+			                  los puntos ordenados de manera creciente según la coordenada $y$ del
+			                  lado izquierdo y derecho.
+
+			            \item Se aplica \code{divide\_and\_conquer} a cada lado: en $X_i$ y $X_d$.
+
+			            \item Esto da dos distancias mínimas: $\delta_i$ y $\delta_d$, que se
+			                  comparan y escoge el mínimo entre las dos $\delta$.
+		            \end{enumerate}
+		      \item \textbf{Combinar:}
+		            \begin{enumerate}
+			            \item Se forma una franja vertical de ancho $2\delta$ centrada en la línea divisoria.
+			            \item Se crea un arreglo $Y'$ que guarda aquellos puntos que existen a una distancia menor
+			                  a $\delta$ de la linea divisoria, ordenados de manera creciente según la coordenada $y$.
+			            \item Se comparan cada uno de los puntos del nuevo arreglo entre a lo más
+			                  6 o 7 puntos siguientes del mismo. Esta propiedad geométrica se
+			                  traduce a: comparar cada punto del arreglo con aquellos puntos con
+			                  los que su distancia euclidiana no sobrepase la distancia mínima
+			                  actual $\delta$.
+			            \item Si se encuentra una distancia menor a $\delta$ dentro de esta franja,
+			                  se actualiza el resultado.
+		            \end{enumerate}
+	      \end{enumerate}
+\end{description}
+
+\subsection{Correctitud}
+
+Se aborda el análisis de la correctitud separando esta misma en parcial y total.
+
+\subsubsection{\textbf{Correctitud Parcial}}
+Se basa en que cada paso cumple su propósito:
+
+\begin{itemize}
+	\item  En el caso base, si hay 3 o menos puntos, el algoritmo recurre al método por fuerza
+	      bruta, el cual es correcto por definición.
+	\item En la fase de división, los puntos se separan correctamente en dos subconjuntos disjuntos
+	      ($V_i$, $X_d$) y sus equivalentes ordenados por $y$), asegurando que se evalúe la
+	      distancia mínima en cada mitad.
+	\item En la combinación, se considera correctamente la franja central, y se comparan sólo
+	      los  puntos relevantes mediante una propiedad geométrica fundamentada: en un
+	      rectángulo de dimensiones $\delta \times 2\delta$ no puede haber más de 8 puntos,
+	      separados al menos por $\delta$, lo que justifica comparar solo con los 6 o 7 puntos
+	      siguientes en $Y'$.
+\end{itemize}
+
+\subsubsection{\textbf{Correctitud Total}}
+Se garantiza porque:
+
+\begin{itemize}
+	\item La recursión siempre se aproxima al caso base, disminuyendo el tamaño del problema en cada llamada.
+
+	\item En cada nivel, se obtiene una solución válida (correctitud parcial), y se combina correctamente
+	      con la solución del subproblema opuesto.
+
+	\item Al combinar los resultados locales de cada subproblema y la franja, se garantiza que el algoritmo
+	      retorna globalmente la distancia mínima.
+\end{itemize}
+
+\subsection{Complejidad Computacional}
+Defina y demuestre su complejidad computacional.
+El algoritmo divide recursivamente un conjunto de $n$ puntos en dos subconjuntos de tamaño $n/2$,
+y en cada nivel realiza trabajo adicional lineal: construcción de arreglos auxiliares ordenados
+($Y_i$, $Y_d$ e $Y'$)  y evaluación de pares en la franja central. Gracias al ordenamiento inicial
+de los puntos en orden creciente según su coordenada $x$ e $y$, estas operaciones pueden implementarse en tiempo \bigo{n} por nivel.
+
+El tiempo de ejecución se puede modelar con la siguiente recurrencia:
+\[
+	T(n) = 2T(n/2) + \bigo{n}
+\]
+Esta recurrencia puede resolverse mediante el Teorema Maestro, que aplica a recurrencias de la forma:
+\[
+	T(n) = aT(n/b) + f(n)
+\]
+Donde:
+\begin{itemize}
+	\item $a$: Número de subproblemas
+	\item $b$: Factor por el cual se divide el tamaño del problema.
+	\item $f(n)$: Costo del trabajo fuera de las llamadas recursivas (división y combinación).
+\end{itemize}
+
+Se tiene que $a = 2$ y $b = 2$, entonces:
+\[
+	\log_b{a} = \log_2{2} = 1
+\]
+y dado que:
+\[
+	f(n) = \bigo{n} = \bigo{n^{\log_b{a}}}
+\]
+estamos en el caso del Teorema Maestro, en donde:
+\[
+	f(n) = \bigo{n^{\log_b{a}}}
+	\rarrow
+	T(n) = \bigo{n^{\log_b{a} \log{n}}} = \bigo{n \log{n}}
+\]
+Por lo tanto, la complejidad temporal del algoritmo es:
+\[
+	T(n) = \bigo{n \log{n}}
+\]
+\end{document}

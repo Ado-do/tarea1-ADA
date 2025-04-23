@@ -1,0 +1,71 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+
+\section{Fuerza Bruta (Alonso y Gabriela)}
+
+Implemente un algoritmo \code{brute force} calculando las n(n − 1) distancias de manera a
+seleccionar tal distancia mínima. Realice un análisis de correctitud del algoritmo. Defina y
+demuestre su complejidad computacional.
+
+
+\subsection{Implementación}
+
+Este es el extracto de la implementación en código cpp (\code{brute\_force.cpp}) del algoritmo brute
+force que calcula las n(n - 1) distancias en un conjunto de puntos:
+\vspace{1em}
+\lstinputlisting[style=cpp, firstline=9, lastline=32]{../../src/brute_force.cpp}
+\vspace{1em}
+
+\subsection{Correctitud}
+
+\begin{description}
+	\item[Objetivo del algoritmo:] ~\\
+	      El objetivo principal del algoritmo es encontrar la distancia euclidiana mínima entre todos
+	      los pares de puntos contenidos en un vector de estructuras \code{Point2D}.
+
+	\item[Invariante del ciclo:] ~\\
+	      \textbf{Definición de la invariante:} Al inicio de cada iteración del ciclo externo (índice
+	      $i$), la variable \code{min\_dist} contiene la distancia mínima encontrada entre todos los
+	      pares de puntos ya revisados, es decir, aquellos donde $0 \leq a < b \leq i + k$, siendo $k$
+	      el número de iteraciones completas del ciclo interno (índice $j$).
+
+	\item[Verificación de la invariante:] ~\\
+	      Verificamos en cada momento del loop:
+
+	      \begin{itemize}
+		      \item \textbf{Antes del ciclo} \\
+		            La variable \code{min\_dist} se inicializa con un valor suficientemente grande (la
+		            distancia entre los puntos (0,0) y (100,100). En este punto, aún no se ha realizado
+		            ninguna comparación, por lo que la invariante se cumple trivialmente.
+
+		      \item \textbf{Durante el ciclo} \\
+		            En cada iteración del ciclo doble, se compara la distancia entre el punto $i$ y
+		            todos los puntos $j$ tales que $j > i$. Si la distancia calculada es menor que
+		            \code{min\_dist}, esta se actualiza con el nuevo valor. En caso contrario,
+		            \code{min\_dist} permanece inalterada. De este modo, al final de cada iteración,
+		            \code{min\_dist} sigue conteniendo la distancia mínima entre todos los pares
+		            evaluados hasta ese momento, cumpliendo así con la invariante.
+
+		      \item \textbf{Después del ciclo} \\
+		            Al finalizar la ejecución de ambos ciclos, se ha recorrido todo el conjunto de pares
+		            posibles $(i, j)$ donde $i < j$, garantizando que todos han sido evaluados una sola
+		            vez. Como resultado, la variable \code{min\_dist} contiene efectivamente la
+		            distancia mínima global entre todos los pares de puntos del vector. Por lo tanto, se
+		            cumple también la condición de salida del algoritmo.
+	      \end{itemize}
+
+	\item[Conclusión:] ~\\
+	      Dado que la invariante se cumple inicialmente, se mantiene durante cada iteración, y al
+	      finalizar garantiza la postcondición esperada, se concluye que el algoritmo es
+	      \textbf{correcto} con respecto al problema que pretende resolver.
+\end{description}
+
+
+\subsection{Complejidad Computacional}
+
+\begin{itemize}
+	\item \textbf{Teórica}: \bigo{n^2} por el doble bucle anidado
+	\item \textbf{Empírica}: Ver sección de análisis experimental
+\end{itemize}
+
+\end{document}
