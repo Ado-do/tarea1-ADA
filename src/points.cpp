@@ -6,8 +6,6 @@
 
 using namespace std;
 
-pair<Point2D, Point2D> closest_points = {{0,0}, {100,100}};
-
 vector<Point2D> get_points_from_file(const string &file_path) {
     ifstream file(file_path);
     if (!file.is_open()) {
@@ -21,7 +19,6 @@ vector<Point2D> get_points_from_file(const string &file_path) {
     }
     return points;
 }
-
 
 void print_points(vector<Point2D> &points) {
     size_t n = points.size();

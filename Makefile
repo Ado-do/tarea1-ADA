@@ -49,9 +49,13 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean up builded files
-clean:
-	rm -rf $(BUILD_DIR)/
-	rm *.png *.txt *.csv
+debug:
+	$(MAKE) DEBUG=1
 
-.PHONY: all clean
+release:
+	$(MAKE) DEBUG=0
+
+clean:
+	rm -rf $(BUILD_DIR)/ *.png *.txt *.csv
+
+.PHONY: all debug release clean

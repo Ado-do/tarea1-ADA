@@ -20,8 +20,9 @@ El objetivo es implementar, y comparar, algoritmos con diferentes técnicas para
 Usar scripts bash para testear algoritmos:
 
 ```bash
+# Testear todos los algoritmos con una determinada cantidad de puntos
+./test_all.sh <n_points>
+
+# Ejecutar todas las pruebas y graficar resultados
 ./benchmark.sh
-```
-```bash
-./run_all_alg.sh
 ```

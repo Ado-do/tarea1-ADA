@@ -1,10 +1,10 @@
-#include "points.hpp"
-
 #include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <set>
 #include <vector>
+
+#include "points.hpp"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ Donde se aborda el problema a tratar de manera general.
 
 
 Como recomendacion a la hora de probar el codigo considere usar
-get_random_points.cpp para la generacion del archivo .txt de puntos aleatorios, 
+get_random_points.cpp para la generacion del archivo .txt de puntos aleatorios,
 pues los metodos fueron hechos para recibir los puntos del siguiente formato:
 
     'xx yy \n
@@ -39,8 +39,7 @@ bool detectorDuplicas(const vector<Point2D> &points) {
     for (const auto &p : points) {
         if (!puntosUnicos.insert(p).second) {
             global_closest.distance = 0.0;
-            global_closest.p1 = p;
-            global_closest.p2 = p;
+            global_closest.pair = {p, p};
             return true;
         }
     }
@@ -48,7 +47,8 @@ bool detectorDuplicas(const vector<Point2D> &points) {
 }
 
 /*
-Función fuerza bruta para encontrar la distancia mínima entre todos los pares de puntos en un rango dado
+Función fuerza bruta para encontrar la distancia mínima entre todos los pares de puntos en un rango
+dado
 */
 ClosestPair FuerzaBruta(const vector<Point2D *> &P, int inicio, int final) {
     ClosestPair result;
@@ -58,8 +58,7 @@ ClosestPair FuerzaBruta(const vector<Point2D *> &P, int inicio, int final) {
             double d = euclidean_distance(*P[i], *P[j]);
             if (d < result.distance) {
                 result.distance = d;
-                result.p1 = *P[i];
-                result.p2 = *P[j];
+                result.pair = {*P[i], *P[j]};
 
                 // Update global closest if this pair is closer
                 if (d < global_closest.distance) {
@@ -75,14 +74,16 @@ ClosestPair FuerzaBruta(const vector<Point2D *> &P, int inicio, int final) {
 Función OrdenarPuntosX ordena vector de puntos según orden creciente de la coordenada x.
 */
 void OrdenarPuntosX(vector<Point2D *> &X) {
-    sort(X.begin(), X.end(), [](Point2D *a, Point2D *b) { return a->x < b->x || (a->x == b->x && a->y < b->y); });
+    sort(X.begin(), X.end(),
+         [](Point2D *a, Point2D *b) { return a->x < b->x || (a->x == b->x && a->y < b->y); });
 }
 
 /*
 Función OrdenarPuntosY ordena vector de puntos según orden creciente de la coordenada y.
 */
 void OrdenarPuntosY(vector<Point2D *> &Y) {
-    sort(Y.begin(), Y.end(), [](Point2D *a, Point2D *b) { return a->y < b->y || (a->y == b->y && a->x < b->x); });
+    sort(Y.begin(), Y.end(),
+         [](Point2D *a, Point2D *b) { return a->y < b->y || (a->y == b->y && a->x < b->x); });
 }
 
 /*
@@ -109,12 +110,12 @@ ClosestPair DistanciaMinFranja(const vector<Point2D *> &franja, double d) {
     result.distance = d;
 
     for (size_t i = 0; i < franja.size(); ++i) {
-        for (size_t j = i + 1; j < franja.size() && (franja[j]->y - franja[i]->y) < result.distance; ++j) {
+        for (size_t j = i + 1; j < franja.size() && (franja[j]->y - franja[i]->y) < result.distance;
+             ++j) {
             double distanciaActual = euclidean_distance(*franja[i], *franja[j]);
             if (distanciaActual < result.distance) {
                 result.distance = distanciaActual;
-                result.p1 = *franja[i];
-                result.p2 = *franja[j];
+                result.pair = {*franja[i], *franja[j]};
 
                 // Update global closest if this pair is closer
                 if (distanciaActual < global_closest.distance) {
@@ -130,7 +131,8 @@ ClosestPair DistanciaMinFranja(const vector<Point2D *> &franja, double d) {
 Función distanciaMinRecursiva recibe los vectores de punteros a puntos X e Y, junto a la posición en
 el vector del inicio y del final.
 */
-ClosestPair distanciaMinRecursiva(vector<Point2D *> &X, vector<Point2D *> &Y, int inicio, int final) {
+ClosestPair distanciaMinRecursiva(vector<Point2D *> &X, vector<Point2D *> &Y, int inicio,
+                                  int final) {
     int cantidad = final - inicio;
     ClosestPair result;
 
@@ -165,10 +167,9 @@ ClosestPair distanciaMinRecursiva(vector<Point2D *> &X, vector<Point2D *> &Y, in
     return (franja_result.distance < result.distance) ? franja_result : result;
 }
 
-
 /*
-Función DividirParaConquistar recibe un vector de 
-puntos cargados, crea 2 vectores de punteros, 
+Función DividirParaConquistar recibe un vector de
+puntos cargados, crea 2 vectores de punteros,
 llama a la función que OrdenarPuntosX e
 OrdenaPuntosY y llama a la función recursiva
 para inicializar el algoritmo.
@@ -176,7 +177,7 @@ para inicializar el algoritmo.
 Mejoras!: Ahora antes de inicializar el algoritmo
 se revisa que no existan duplicas en los puntos
 para seguir. Si se detecta duplica se finaliza el
-proceso pues la distancia mínima es 0 
+proceso pues la distancia mínima es 0
 */
 double DividirParaConquistar(vector<Point2D> &P) {
     global_closest = ClosestPair();
@@ -187,8 +188,7 @@ double DividirParaConquistar(vector<Point2D> &P) {
 
     if (P.size() == 2) {
         global_closest.distance = euclidean_distance(P[0], P[1]);
-        global_closest.p1 = P[0];
-        global_closest.p2 = P[1];
+        global_closest.pair = {P[0], P[1]};
         return global_closest.distance;
     }
 
@@ -217,7 +217,7 @@ int main(int argc, char *argv[]) {
     double distanciaMinima = DividirParaConquistar(puntos);
     auto end = chrono::high_resolution_clock::now();
 
-    print_min_distance(distanciaMinima, global_closest.p1, global_closest.p2);
+    print_min_distance(distanciaMinima, global_closest.pair.first, global_closest.pair.second);
 
     auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
     cout << "Tiempo de ejecución:\n\t" << duration.count() << " ns\n";

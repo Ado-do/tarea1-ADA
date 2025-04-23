@@ -1,9 +1,9 @@
-#include "points.hpp"
-
 #include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <vector>
+
+#include "points.hpp"
 
 using namespace std;
 
@@ -34,7 +34,39 @@ tomar en cuenta el formato de entrada por favor.
 */
 
 /*
-Función fuerza bruta para encontrar la distancia mínima entre todos los pares de puntos en un rango dado
+Función DividirParaConquistar recibe un vector de puntos cargados, crea 2 vectores de
+punteros, llama a la función que OrdenarPuntosX e OrdenaPuntosY y llama a la función
+recursiva para inicializar el algoritmo.
+*/
+ClosestPair DividirParaConquistar(vector<Point2D> &P);
+
+/*
+Función distanciaMinRecursiva recibe los vectores de punteros a puntos X e Y, junto a la
+posición en el vector del inicio y del final.
+*/
+ClosestPair distanciaMinRecursiva(vector<Point2D *> &X, vector<Point2D *> &Y, int inicio,
+                                  int final);
+
+/*
+Función DistanciaMinFranja recibe un vector "Franja" de punteros a puntos que incluye
+solo aquellos puntos cuya coordenada x se encuentra a una distancia menor a "d" de
+la línea divisoria vertical del espacio de búsqueda.
+
+La franja esta ordenada en forma creciente según la coordenada Y desde la función
+"DividirParaConquistar".
+
+La función hace que cada punto "i" se compara solo con los puntos "j" tales que la
+diferencia en la coordenada "y" entre i y j sea menor que d. Aunque y según la teoría
+descrita en el libro de de "Introduction to Algorithms" ya mencionado solo es
+necesario revisar 7 puntos "j" por punto i en la franja.
+Finalmente devuelve la distancia mínima.
+*/
+ClosestPair DistanciaMinFranja(const vector<Point2D *> &franja,
+                                const ClosestPair &current_closest);
+
+/*
+Función fuerza bruta para encontrar la distancia mínima entre todos los pares de puntos en
+un rango dado
 */
 ClosestPair FuerzaBruta(const vector<Point2D *> &P, int start, int end) {
     ClosestPair result;
@@ -45,8 +77,7 @@ ClosestPair FuerzaBruta(const vector<Point2D *> &P, int start, int end) {
             double d = euclidean_distance(*P[i], *P[j]);
             if (d < result.distance) {
                 result.distance = d;
-                result.p1 = *P[i];
-                result.p2 = *P[j];
+                result.pair = {*P[i], *P[j]};
             }
         }
     }
@@ -58,17 +89,22 @@ Función OrdenarPuntosX ordena vector de puntos según orden creciente de la coo
 */
 void OrdenarPuntosX(vector<Point2D *> &X) {
     sort(X.begin(), X.end(), [](Point2D *a, Point2D *b) {
-        // cout << "Comparando X: (" << a->x << ", " << a->y << ") con (" << b->x << ", " << b->y << ")\n";
+        // cout << "Comparando X: (" << a->x << ", " << a->y << ") con (" << b->x << ", "
+        // << b->y <<
+        // ")\n";
         return a->x < b->x;
     });
 }
 
 /*
-Función OrdenarPuntosY ordena vector de puntos según orden creciente de la coordenada y.
+Función OrdenarPuntosY ordena vector de puntos
+según orden creciente de la coordenada y.
 */
 void OrdenarPuntosY(vector<Point2D *> &Y) {
     sort(Y.begin(), Y.end(), [](Point2D *a, Point2D *b) {
-        // cout << "Comparando Y: (" << a->x << ", " << a->y << ") con (" << b->x << ", " << b->y << ")\n";
+        // cout << "Comparando Y: (" << a->x << ", " << a->y << ") con (" << b->x << ", "
+        // << b->y <<
+        // ")\n";
         return a->y < b->y;
     });
 }
@@ -91,17 +127,19 @@ solo es necesario revisar 7 puntos "j" por punto i en la franja.
 Posterior al proceso descrito la función devuelve la distancia
 mínima encontrada en la franja.
 */
-ClosestPair DistanciaMinFranja(const vector<Point2D *> &franja, const ClosestPair &current_closest) {
+ClosestPair DistanciaMinFranja(const vector<Point2D *> &franja,
+                               const ClosestPair &current_closest) {
     ClosestPair result = current_closest;
 
     for (size_t i = 0; i < franja.size(); ++i) {
         // Check only the next 7 points as per the algorithm
-        for (size_t j = i + 1; j < franja.size() && (franja[j]->y - franja[i]->y) < result.distance && j <= i + 7; ++j) {
+        for (size_t j = i + 1;
+             j < franja.size() && (franja[j]->y - franja[i]->y) < result.distance && j <= i + 7;
+             ++j) {
             double distanciaActual = euclidean_distance(*franja[i], *franja[j]);
             if (distanciaActual < result.distance) {
                 result.distance = distanciaActual;
-                result.p1 = *franja[i];
-                result.p2 = *franja[j];
+                result.pair = {*franja[i], *franja[j]};
             }
         }
     }
@@ -109,10 +147,11 @@ ClosestPair DistanciaMinFranja(const vector<Point2D *> &franja, const ClosestPai
 }
 
 /*
-Función distanciaMinRecursiva recibe los vectores de punteros a puntos X e Y, junto a la posición en el
-vector del inicio y del final.
+Función distanciaMinRecursiva recibe los vectores de punteros a puntos X e Y, junto a la
+posición en el vector del inicio y del final.
 */
-ClosestPair distanciaMinRecursiva(vector<Point2D *> &X, vector<Point2D *> &Y, int inicio, int final) {
+ClosestPair distanciaMinRecursiva(vector<Point2D *> &X, vector<Point2D *> &Y, int inicio,
+                                  int final) {
     int cantidad = final - inicio;
     ClosestPair result;
 
@@ -124,7 +163,8 @@ ClosestPair distanciaMinRecursiva(vector<Point2D *> &X, vector<Point2D *> &Y, in
     int mitad = inicio + cantidad / 2;
     Point2D *puntoMedio = X[mitad];
 
-    // Separar puntos ordenados por Y en dos mitades según su posición relativa al punto medio en X
+    // Separar puntos ordenados por Y en dos mitades según su posición relativa al punto
+    // medio en X
     vector<Point2D *> Y_izq, Y_der;
     for (auto *p : Y) {
         if (p->x < puntoMedio->x || (p->x == puntoMedio->x && p->y <= puntoMedio->y))
@@ -154,12 +194,12 @@ ClosestPair distanciaMinRecursiva(vector<Point2D *> &X, vector<Point2D *> &Y, in
 }
 
 /*
-Función DividirParaConquistar recibe un vector de puntos cargados, crea 2 vectores de punteros, llama a la
-función que OrdenarPuntosX e OrdenaPuntosY y llama a la función recursiva para inicializar el algoritmo.
+Función DividirParaConquistar recibe un vector de puntos cargados, crea 2 vectores de
+punteros, llama a la función que OrdenarPuntosX e OrdenaPuntosY y llama a la función
+recursiva para inicializar el algoritmo.
 */
 ClosestPair DividirParaConquistar(vector<Point2D> &P) {
     ClosestPair result;
-    result.distance = numeric_limits<double>::max();
 
     if (P.size() < 2) {
         cerr << "Se necesitan al menos 2 puntos\n";
@@ -168,8 +208,7 @@ ClosestPair DividirParaConquistar(vector<Point2D> &P) {
 
     if (P.size() == 2) {
         result.distance = euclidean_distance(P[0], P[1]);
-        result.p1 = P[0];
-        result.p2 = P[1];
+        result.pair = {P[0], P[1]};
         return result;
     }
 
@@ -201,7 +240,7 @@ int main(int argc, char *argv[]) {
     auto start = chrono::high_resolution_clock::now();
 
     ClosestPair result = DividirParaConquistar(puntos);
-    print_min_distance(result.distance, result.p1, result.p2);
+    print_min_distance(result.distance, result.pair.first, result.pair.second);
 
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);

@@ -1,33 +1,34 @@
-#include "points.hpp"
-
-#include <vector>
-#include <iostream>
 #include <chrono>
+#include <iostream>
+#include <vector>
+
+#include "points.hpp"
 
 using namespace std;
 
-double brute_force(vector<Point2D> &points) {
-    #ifdef DEBUG
+ClosestPair brute_force(vector<Point2D> &points) {
+#ifdef DEBUG
     printf("Calculando con fuerza bruta las distancias entre todos los puntos:\n");
-    #endif
+#endif
 
-    double min_dist = MAX_DIST;
+    ClosestPair result;
+
     size_t n = points.size();
     for (size_t i = 0; i < n - 1; i++) {
         for (size_t j = i + 1; j < n; j++) {
             double dist = euclidean_distance(points[i], points[j]);
 
-            #ifdef DEBUG
+#ifdef DEBUG
             printf("\tdist(p%zu, p%zu) = %6.2lf\n", i, j, dist);
-            #endif
+#endif
 
-            if (dist < min_dist) {
-                min_dist = dist;
-                closest_points = {points[i], points[j]};
+            if (dist < result.distance) {
+                result.distance = dist;
+                result.pair = {points[i], points[j]};
             }
         }
     }
-    return min_dist;
+    return result;
 }
 
 int main(int argc, char *argv[]) {
@@ -38,14 +39,14 @@ int main(int argc, char *argv[]) {
 
     vector<Point2D> points = get_points_from_file(argv[1]);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     print_points(points);
-    #endif
+#endif
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    double min_dist = brute_force(points);
-    print_min_distance(min_dist, closest_points.first, closest_points.second);
+    ClosestPair result = brute_force(points);
+    print_min_distance(result.distance, result.pair.first, result.pair.second);
 
     auto end = std::chrono::high_resolution_clock::now();
 

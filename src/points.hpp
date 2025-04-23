@@ -4,14 +4,13 @@
 #include <string>
 #include <vector>
 
-#define MAX_DIST euclidean_distance({0, 0}, {100, 100})
+#define MAX_DIST 141.5
 
 struct Point2D {
     int x, y;
 
     // Mejora para optimizar el código
     bool operator<(const Point2D &other) const {
-            // Funcion que retorn la distancia euclideana entre dos puntos
         if (x != other.x) {
             return x < other.x;
         }
@@ -19,17 +18,13 @@ struct Point2D {
     }
 };
 
-inline double euclidean_distance(const Point2D &p1, const Point2D &p2) { return sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2)); }
-
 struct ClosestPair {
     double distance;
-    Point2D p1;
-    Point2D p2;
+    std::pair<Point2D, Point2D> pair;
     ClosestPair() : distance(MAX_DIST) {}
 };
 
-
-extern std::pair<Point2D, Point2D> closest_points;
+inline double euclidean_distance(const Point2D &p1, const Point2D &p2) { return sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2)); }
 
 // Funcion que entrega un vector de puntos leidos desde un archivo de texto
 std::vector<Point2D> get_points_from_file(const std::string &file_path);
