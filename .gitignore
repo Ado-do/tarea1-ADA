@@ -1,15 +1,11 @@
 # latex
-doc/*
-!doc/sections/
-!doc/img/
-!doc/.latexmkrc
-!doc/*.tex
-!doc/*.cls
+doc/build/*
+!doc/build/*.pdf
 .latexindent.yaml
 indent.log
 
 # cpp build files
-build/
+# ./build/
 *.o
 *.out
 
