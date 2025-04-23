@@ -1,7 +1,7 @@
 # latex
 doc/*
 !doc/sections/
-!doc/img/*.png
+!doc/img/
 !doc/.latexmkrc
 !doc/*.tex
 !doc/*.cls
